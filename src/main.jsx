@@ -10,10 +10,11 @@ import Signup from './components/Signup/Signup.jsx'
 import Login from './components/Login/Login.jsx'
 import ChannelProfile from './components/ChannelProfile/ChannelProfile.jsx'
 import Homepage from './components/VideoDisplay/Homepage.jsx'
+import UserContextProvider from './Context/UserContextProvider.jsx'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<Layout />}>
-      <Route path='' element={<Homepage/>}/>
+      <Route path='' element={<Signup/>}/>
       <Route path='channel' element={<ChannelProfile />} />
       <Route path='signup' element={<Signup/>}/>
       <Route path='login' element={<Login/>}/>
@@ -23,9 +24,9 @@ const router = createBrowserRouter(
 ) 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  <UserContextProvider >
     <RouterProvider router={router} />
     {/* <Signup/> */}
     {/* <ChannelProfile/> */}
-  </React.StrictMode>,
+  </UserContextProvider>
 )

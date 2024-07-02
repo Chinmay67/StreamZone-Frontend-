@@ -1,40 +1,42 @@
-import { useState,useContext } from 'react';
+import  { useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Stack, TextField, styled, Box, Typography, Paper, Button, Card, CardMedia, InputLabel, GlobalStyles } from '@mui/material';
+import { Stack, TextField, styled, Box, Typography, Paper, Button, Card, CardMedia, InputLabel, GlobalStyles, CircularProgress, Snackbar, Alert as MuiAlert } from '@mui/material';
 import { PhotoCamera } from '@mui/icons-material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import UserContext from '../../Context/UserContext';
-// Custom theme with darker colors and updated text label color
+import { useRecoilState } from 'recoil';
+import { userAtom } from '../../Store/atoms/userAtoms';
+import { RegisterUser, loginUser } from '../../api/userService';
+
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#37474F', // Dark gray
+      main: '#1a73e8', // Blue
     },
     secondary: {
-      main: '#00838F', // Dark teal
+      main: '#34a853', // Green
     },
     text: {
-      primary: '#FFFFFF', // White for text labels
+      primary: '#202124', // Dark gray for text labels
     },
   },
 });
 
 const CustomTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInputBase-root': {
-    height: '56px', // Set the height of the root input base
+    height: '56px',
   },
   '& input': {
-    padding: '0 10px', // Adjust padding to ensure content fits
-    height: '100%', // Make input take full height of the root
-    boxSizing: 'border-box', // Ensure padding is included in the height calculation
+    padding: '0 10px',
+    height: '100%',
+    boxSizing: 'border-box',
     border: 'none',
-    color: theme.palette.text.primary, // Set input text color
+    color: theme.palette.text.primary,
   },
-  width: "80%",
+  width: "100%",
 }));
 
 const CustomInputLabel = styled(InputLabel)(({ theme }) => ({
-  color: theme.palette.text.primary, // Set label text color
+  color: theme.palette.text.primary,
 }));
 
 const ImageUpload = ({ label, image, onChange }) => {
@@ -69,14 +71,18 @@ const ImageUpload = ({ label, image, onChange }) => {
 };
 
 function Signup() {
-  const [avatar, setAvatar] = useState('');
-  const [coverImage, setCoverImage] = useState('');
-  const [UserName,setUserName]=useState('')
-  const [Email,setEmail]=useState('')
-  const [Password,setPassword]=useState('')
-  const [FullName,setFullName]=useState('')
+  const [newUser, SetNewUser] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [avatar, setAvatar] = useState(null);
+  const [coverImage, setCoverImage] = useState(null);
+  const [username, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [fullname, setFullName] = useState('');
+  const [currentUser, setCurrentUser] = useRecoilState(userAtom);
 
-  const {user,setUser} = useContext(UserContext)
   const handleAvatarUpload = (event) => {
     setAvatar(event.target.files[0]);
   };
@@ -84,84 +90,134 @@ function Signup() {
   const handleCoverImageUpload = (event) => {
     setCoverImage(event.target.files[0]);
   };
-  const handleSubmit=(e)=>{
-    e.preventDefault()
-    setUser({
-        UserName,
-        Email,
-        Password,
-        FullName,
-        avatar,
-        coverImage
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setSuccessMessage('');
+    setErrorMessage('');
 
-    })
-    console.log(user)
-    
-    
-  }
-  
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('fullname', fullname);
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('avatar', avatar);
+    formData.append('coverImage', coverImage);
+
+    try {
+      const userDetails = await RegisterUser(formData);
+      const userData = userDetails.data;
+      SetNewUser(userData);
+
+      const loggedUser = await loginUser(email, password);
+      const loggedUserData = loggedUser.data.user;
+      setCurrentUser(loggedUserData);
+
+      setSuccessMessage('Registration done and logged in successfully');
+      setLoading(false);
+      setAvatar(null);
+      setCoverImage(null);
+      setUserName('');
+      setEmail('');
+      setPassword('');
+      setFullName('');
+    } catch (error) {
+      console.log(error);
+      setErrorMessage(error.response?.data?.message || 'Registration failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    console.log(currentUser);
+  }, [currentUser]);
 
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyles styles={{ body: { overflow: 'hidden' } }} />
-      <Box sx={{
-        background: 'linear-gradient(to bottom, #455A64, #263238)',
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 2
-      }}>
-        <Paper sx={{
-          width: "60%",
-          padding: 4,
-          boxShadow: '0 8px 16px rgba(0, 0, 0, 0.3)', // Enhanced shadow
-          borderRadius: 3,
-          background: '#37474F' // Darker form background
+    <>
+      <ThemeProvider theme={theme}>
+        <GlobalStyles styles={{ body: { overflow: 'hidden' } }} />
+        <Box sx={{
+          background: 'linear-gradient(to bottom, #e8f0fe, #ffffff)',
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}>
-          <Stack spacing={2} margin='auto' width='80%'>
-            <Typography variant="h4" align="center" color="secondary">Signup Form</Typography>
-            <CustomTextField 
-            
-            label="Full Name" 
-            variant="standard"
-            value={FullName}
-            onChange={(e)=>setFullName(e.target.value)}/>
-            <CustomTextField 
-            id="username" label="Username" 
-            variant="standard"
-            
-            value={UserName}
-            onChange={(e)=>setUserName(e.target.value)}
-            />
-            <CustomTextField id="email" 
-            label="Email" 
-            variant="standard" 
-            type='email'
-            value={Email}
-            onChange={(e)=>setEmail(e.target.value)}
-            />
-            <CustomTextField id="password" 
-            label="Password" 
-            variant="standard" 
-            type='password' 
-            value={Password}
-            onChange={(e)=>setPassword(e.target.value)}
-            />
-            <ImageUpload label="Avatar" image={avatar} onChange={handleAvatarUpload} />
-            <ImageUpload label="Cover Image" image={coverImage} onChange={handleCoverImageUpload} />
-            <Button
-             
-            variant="contained" 
-            color="secondary" 
-            sx={{ mt: 4 }}
-            onClick={handleSubmit}
-            >Submit</Button>
-          </Stack>
-        </Paper>
-      </Box>
-    </ThemeProvider>
+          <Paper sx={{
+            width: "40%",
+            padding: 4,
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.3)',
+            borderRadius: 3,
+            background: '#ffffff'
+          }}>
+            <Stack spacing={2} margin='auto' width='100%'>
+              <Typography variant="h4" align="center" color="primary">Signup Form</Typography>
+              <CustomTextField
+                label="Full Name"
+                variant="standard"
+                value={fullname}
+                onChange={(e) => setFullName(e.target.value)}
+              />
+              <CustomTextField
+                id="username"
+                label="Username"
+                variant="standard"
+                value={username}
+                onChange={(e) => setUserName(e.target.value)}
+              />
+              <CustomTextField
+                id="email"
+                label="Email"
+                variant="standard"
+                type='email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <CustomTextField
+                id="password"
+                label="Password"
+                variant="standard"
+                type='password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <ImageUpload label="Avatar" image={avatar} onChange={handleAvatarUpload} />
+              <ImageUpload label="Cover Image" image={coverImage} onChange={handleCoverImageUpload} />
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ mt: 4, borderRadius: '20px' }}
+                onClick={handleSubmit}
+                disabled={loading}
+              >
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Submit'}
+              </Button>
+            </Stack>
+          </Paper>
+        </Box>
+      </ThemeProvider>
+
+      <Snackbar
+        open={!!successMessage}
+        onClose={() => setSuccessMessage('')}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <MuiAlert elevation={6} variant="filled" onClose={() => setSuccessMessage('')} severity="success">
+          {successMessage}
+        </MuiAlert>
+      </Snackbar>
+      <Snackbar
+        open={!!errorMessage}
+        onClose={() => setErrorMessage('')}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <MuiAlert elevation={6} variant="filled" onClose={() => setErrorMessage('')} severity="error">
+          {errorMessage}
+        </MuiAlert>
+      </Snackbar>
+    </>
   );
 }
 

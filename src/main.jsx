@@ -10,11 +10,13 @@ import Signup from './components/Signup/Signup.jsx'
 import Login from './components/Login/Login.jsx'
 import ChannelProfile from './components/ChannelProfile/ChannelProfile.jsx'
 import Homepage from './components/VideoDisplay/Homepage.jsx'
-import UserContextProvider from './Context/UserContextProvider.jsx'
+
+import App from './App.jsx'
+import { RecoilRoot } from 'recoil'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<Layout />}>
-      <Route path='' element={<Signup/>}/>
+      <Route path='' element={<Homepage/>}/>
       <Route path='channel' element={<ChannelProfile />} />
       <Route path='signup' element={<Signup/>}/>
       <Route path='login' element={<Login/>}/>
@@ -24,9 +26,10 @@ const router = createBrowserRouter(
 ) 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <UserContextProvider >
+  <RecoilRoot >
     <RouterProvider router={router} />
+   
     {/* <Signup/> */}
     {/* <ChannelProfile/> */}
-  </UserContextProvider>
+  </RecoilRoot>
 )

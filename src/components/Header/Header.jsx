@@ -1,7 +1,7 @@
 import { AppBar, Toolbar,styled,Box, Typography, InputBase, Avatar } from '@mui/material'
 // import React from 'react'
 // import {borderRadius} from "@mui/system"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import { theme } from '../../theme';
 import {Mail, Notifications } from '@mui/icons-material';
 import Badge from '@mui/material/Badge';
@@ -9,6 +9,10 @@ import { Menu,MenuItem} from '@mui/material';
 
 import SlowMotionVideoOutlinedIcon from '@mui/icons-material/SlowMotionVideoOutlined';
 import Sidebar from '../Sidebar/Sidebar';
+import { useRecoilState ,useRecoilValue} from 'recoil';
+import { checkUser, userAtom } from '../../Store/atoms/userAtoms';
+import SignupLoginButton from '../signupLoginButton/SignupLoginButton';
+import { refreshUser } from '../../api/userService';
 const StyledToolbar=styled(Toolbar)({
     display:"flex",
     justifyContent:"space-between",
@@ -46,6 +50,9 @@ const UserBox=styled(Box)(({theme})=>({
   }))
 function Header() {
     const [open,setOpen]=useState(false)
+    const userStatus=useRecoilValue(checkUser)
+    const [currentUser,setCurrentUser]=useRecoilState(userAtom)
+    
     return (
         <AppBar position='sticky' margin-bottom='5px' >
            
@@ -56,44 +63,53 @@ function Header() {
                 </Typography>
                 <SlowMotionVideoOutlinedIcon sx={{display:{xs:"block",sm:"none"}}} />
                 <Search><Inp placeholder="Search..."/></Search>  
-                <Icons>
-                    <Badge badgeContent={4} color="error">
-                        <Mail />
-                    </Badge>
-                    <Badge badgeContent={2} color="error">
-                        <Notifications  />
-                    </Badge>
+                {userStatus===true ? 
+                (
+                    <>
+                        <Icons>
+                        <Badge badgeContent={4} color="error">
+                            <Mail />
+                        </Badge>
+                        <Badge badgeContent={2} color="error">
+                            <Notifications  />
+                        </Badge>
+                        
+                        <Avatar
+                            src={currentUser.data.avatar}
+                            sx={{width:30,height:30}}
+                            onClick={e=>setOpen(true)}
+                        />
                     
-                    <Avatar sx={{width:30,height:30}}
-                        onClick={e=>setOpen(true)}
-                    />
-                   
 
-                </Icons>  
-                <UserBox onClick={e=>setOpen(true)}>
-                    <Avatar sx={{width:30,height:30}}/>
-                    <Typography variant='span'>John</Typography>
-                </UserBox>
-                <Menu
-                id="demo-positioned-menu"
-                aria-labelledby="demo-positioned-button"
-                // anchorEl={anchorEl}
-                open={open}
-                onClose={e=>setOpen(false)}
-                // onClose={handleClose}
-                anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}
-                >
-                <MenuItem>Profile</MenuItem>
-                <MenuItem>My account</MenuItem>
-                <MenuItem>Logout</MenuItem>
-      </Menu>      
+                        </Icons>  
+                        <UserBox onClick={e=>setOpen(true)}>
+                            <Avatar sx={{width:30,height:30}}/>
+                            <Typography variant='span'>John</Typography>
+                        </UserBox>
+                        <Menu
+                            id="demo-positioned-menu"
+                            aria-labelledby="demo-positioned-button"
+                            // anchorEl={anchorEl}
+                            open={open}
+                            onClose={e=>setOpen(false)}
+                            // onClose={handleClose}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            >
+                            <MenuItem>Profile</MenuItem>
+                            <MenuItem>My account</MenuItem>
+                            <MenuItem>Logout</MenuItem>
+                        </Menu>
+                    </>      
+                ):(
+                    <SignupLoginButton/>
+                )}
             </StyledToolbar>
             
         </AppBar>

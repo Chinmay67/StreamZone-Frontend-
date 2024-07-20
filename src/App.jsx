@@ -1,30 +1,62 @@
-import { useState } from 'react'
+import  { useEffect } from 'react';
+import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
+import Layout from './Layout.jsx';
+import Signup from './components/Signup/Signup.jsx';
+import Login from './components/Login/Login.jsx';
+import ChannelProfile from './components/ChannelProfile/ChannelProfile.jsx';
+import Homepage from './components/VideoDisplay/Homepage.jsx';
+import { useRecoilState } from 'recoil';
+import { getCurrentUser } from './api/userService.js';
+import { checkUser, userAtom } from './Store/atoms/userAtoms.jsx';
+import Test from './components/ChannelProfile/Test.jsx';
 
-
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path='/' element={<Layout />}>
+      <Route path='' element={<Homepage />} />
+      <Route path='channel' element={<ChannelProfile />} />
+      <Route path='signup' element={<Signup />} />
+      <Route path='login' element={<Login />} />
+      <Route path='otherProfile' element={<OtherChannel/>}/>
+    </Route>
+  )
+);
 
 function App() {
-  const [color,setcolor]= useState('olive');
-  function change_background(newcolor){
-    setcolor(newcolor);
+  const [currentUser, setCurrentUser] = useRecoilState(userAtom);
+  const [checkUserState, setCheckUser] = useRecoilState(checkUser);
 
-  }
- 
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userID = localStorage.getItem("userID");
+      if (userID) {
+        try {
+          const user = await getCurrentUser();
+          if (user) {
+            setCurrentUser(user);
+            setCheckUser(true);
+          } else {
+            setCheckUser(false);
+          }
+        } catch (error) {
+          console.log(error);
+          setCheckUser(false);
+        }
+      }  
+    };
+
+    fetchUser();
+  }, [setCheckUser, setCurrentUser]);
+
+  useEffect(() => {
+    console.log("checkUserState:", checkUserState);
+    console.log("currentUser:", currentUser);
+  }, [checkUserState, currentUser]);
 
   return (
-    <>
-    <div className='w-full h-screen duration-300 ' style={{backgroundColor:color, width:"100%", height:"100vh"
-    }}>
-      <div className='position-relative bg-pink-200  rounded p-4 ' style={{ position: 'absolute', top: '505px', left: '249px' }}>
-        <button onClick={()=>change_background('red')}   className=' bg-red-900 text-white  w-22 h-51 p-2 mr-5 shadow-lg rounded'>Text Content</button>
-        <button onClick={()=>change_background('green')}  className=' bg-green-500 text-white p-2 mr-5 shadow rounded'>Text Content</button>
-        <button onClick={()=>change_background('black')}  className='bg-black text-white p-2 mr-5 shadow rounded'>Text Content</button>
-        <button onClick={()=>change_background('blue')} className='bg-blue-600 text-white p-2 mr-5 shadow rounded'>Text Content</button>
-        <button onClick={()=>change_background('purple')}   className='bg-purple-700 text-white p-2  shadow rounded'>Text Content</button>
-
-      </div>
-      </div>
-    </>
-  )
+    <RouterProvider router={router} />
+    // <Test/>
+  );
 }
 
-export default App
+export default App;

@@ -1,11 +1,12 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Stack, TextField, styled, Box, Typography, Paper, Button, Card, CardMedia, InputLabel, GlobalStyles, CircularProgress, Snackbar, Alert as MuiAlert } from '@mui/material';
 import { PhotoCamera } from '@mui/icons-material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useRecoilState } from 'recoil';
-import { userAtom } from '../../Store/atoms/userAtoms';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { userAtom, checkUser as checkUserAtom } from '../../Store/atoms/userAtoms';
 import { RegisterUser, loginUser } from '../../api/userService';
+import { Link, useNavigate } from 'react-router-dom';
 
 const theme = createTheme({
   palette: {
@@ -82,7 +83,8 @@ function Signup() {
   const [password, setPassword] = useState('');
   const [fullname, setFullName] = useState('');
   const [currentUser, setCurrentUser] = useRecoilState(userAtom);
-
+  const setCheckUser = useSetRecoilState(checkUserAtom); // Use the correct atom
+  const navigate=useNavigate();
   const handleAvatarUpload = (event) => {
     setAvatar(event.target.files[0]);
   };
@@ -113,15 +115,17 @@ function Signup() {
       const loggedUser = await loginUser(email, password);
       const loggedUserData = loggedUser.data.user;
       setCurrentUser(loggedUserData);
-
+      // localStorage.setItem('userID', loggedUserData._id);
+      setCheckUser(true); // Use boolean true instead of string "true"
       setSuccessMessage('Registration done and logged in successfully');
-      setLoading(false);
       setAvatar(null);
       setCoverImage(null);
       setUserName('');
       setEmail('');
       setPassword('');
       setFullName('');
+      navigate('/channel')
+
     } catch (error) {
       console.log(error);
       setErrorMessage(error.response?.data?.message || 'Registration failed');
@@ -194,7 +198,9 @@ function Signup() {
               >
                 {loading ? <CircularProgress size={24} color="inherit" /> : 'Submit'}
               </Button>
+              <Typography>Have an account <Button component={Link} to='/login'>Login</Button></Typography>
             </Stack>
+            
           </Paper>
         </Box>
       </ThemeProvider>

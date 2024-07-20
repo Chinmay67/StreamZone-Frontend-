@@ -1,8 +1,11 @@
-import React from 'react';
+// import React from 'react';
 import Header from './components/Header/Header';
 import { Outlet } from 'react-router-dom';
 import Divider from '@mui/material/Divider';
 import { Box, GlobalStyles } from '@mui/material';
+import { useEffect } from 'react';
+import { getCurrentUser } from './api/userService';
+import { LocalLaundryService } from '@mui/icons-material';
 
 const globalStyles = {
   body: {
@@ -13,7 +16,9 @@ const globalStyles = {
   },
 };
 
+
 function Layout() {
+  
   return (
     <>
       <GlobalStyles styles={globalStyles} />

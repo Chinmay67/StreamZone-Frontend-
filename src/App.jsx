@@ -9,6 +9,7 @@ import { useRecoilState } from 'recoil';
 import { getCurrentUser } from './api/userService.js';
 import { checkUser, userAtom } from './Store/atoms/userAtoms.jsx';
 import Test from './components/ChannelProfile/Test.jsx';
+import UploadPage from './components/UploadPage/UploadPage.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -17,7 +18,7 @@ const router = createBrowserRouter(
       <Route path='channel' element={<ChannelProfile />} />
       <Route path='signup' element={<Signup />} />
       <Route path='login' element={<Login />} />
-      <Route path='otherProfile' element={<OtherChannel/>}/>
+      {/* <Route path='otherProfile' element={<OtherChannel/>}/> */}
     </Route>
   )
 );
@@ -28,25 +29,20 @@ function App() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const userID = localStorage.getItem("userID");
-      if (userID) {
-        try {
-          const user = await getCurrentUser();
-          if (user) {
-            setCurrentUser(user);
-            setCheckUser(true);
-          } else {
-            setCheckUser(false);
-          }
-        } catch (error) {
-          console.log(error);
-          setCheckUser(false);
-        }
-      }  
-    };
+      try{
+        const user = await getCurrentUser();
+        setCurrentUser(user)
+        setCheckUser(true);
+      }
+      catch(error){
+        console.log(error);
+        setCheckUser(false)
 
+      }
+    }
     fetchUser();
-  }, [setCheckUser, setCurrentUser]);
+      
+  }, [setCheckUser, setCurrentUser])
 
   useEffect(() => {
     console.log("checkUserState:", checkUserState);
@@ -55,6 +51,7 @@ function App() {
 
   return (
     <RouterProvider router={router} />
+    // <UploadPage/>
     // <Test/>
   );
 }

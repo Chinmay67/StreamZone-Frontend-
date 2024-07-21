@@ -69,14 +69,14 @@ const Sidebar = () => {
                   </ListItemButton>
                 </ListItem>
                 <Divider sx={{ borderColor: '#555' }} />
-                <ListItem disablePadding>
+                {/* <ListItem disablePadding>
                   <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
                     <ListItemIcon sx={{ color: '#fff' }}>
                       <BarChartIcon />
                     </ListItemIcon>
                     <ListItemText primary="Channel Stats" />
                   </ListItemButton>
-                </ListItem>
+                </ListItem> */}
                 <ListItem disablePadding>
                   <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
                     <ListItemIcon sx={{ color: '#fff' }}>
@@ -119,7 +119,64 @@ const Sidebar = () => {
                 </ListItem>
               </List>
               <Divider sx={{ borderColor: '#555' }} />
+              <List>
+                <ListItem disablePadding>
+                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
+                    <ListItemText primary="Studio" />
+                  </ListItemButton>
+                </ListItem>
+                <Divider sx={{ borderColor: '#555' }} />
+                <ListItem disablePadding>
+                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
+                    <ListItemIcon sx={{ color: '#fff' }}>
+                      <BarChartIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Channel Stats" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
+                    <ListItemIcon sx={{ color: '#fff' }}>
+                      <SubscriptionsIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Upload Video" />
+                  </ListItemButton>
+                </ListItem>
+                {/* <ListItem disablePadding> */}
+                  {/* <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
+                    <ListItemIcon sx={{ color: '#fff' }}>
+                      <PlaylistPlayIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Playlists" />
+                  </ListItemButton>
+                </ListItem> */}
+                {/* <ListItem disablePadding>
+                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
+                    <ListItemIcon sx={{ color: '#fff' }}>
+                      <HistoryIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Watch History" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
+                    <ListItemIcon sx={{ color: '#fff' }}>
+                      <AccountCircleIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Channel Profile" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
+                    <ListItemIcon sx={{ color: '#fff' }}>
+                      <ThumbUpIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Liked Videos" />
+                  </ListItemButton>
+                </ListItem> */}
+              </List>
             </Box>
+            
           ) : (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb: 2, marginTop:'40vh'}}>
               <SignupLoginButton/>

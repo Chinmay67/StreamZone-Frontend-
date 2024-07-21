@@ -5,7 +5,7 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import VideoCard from '../VideoCard/VideoCard';
 import { getChannelProfile } from '../../api/userService';
 import { useRecoilState } from 'recoil';
-import { userAtom } from '../../Store/atoms/userAtoms';
+import { channelDetails, userAtom } from '../../Store/atoms/userAtoms';
 import { useEffect, useState } from 'react';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 
@@ -19,7 +19,7 @@ const Item = styled('div')(({ theme }) => ({
 
 function Channel() {
   const [currentUser, setCurrentUser] = useRecoilState(userAtom);
-  const [channel, setChannel] = useState({});
+  const [channel, setChannel] = useRecoilState(channelDetails);
 
   useEffect(() => {
     const fetchChannel = async () => {
@@ -28,7 +28,7 @@ function Channel() {
       console.log(response.data);
     };
     fetchChannel();
-  }, [setCurrentUser]);
+  }, [setCurrentUser,setChannel,currentUser]);
 
   return (
     <>

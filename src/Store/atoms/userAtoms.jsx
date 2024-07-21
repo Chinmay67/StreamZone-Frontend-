@@ -11,3 +11,8 @@ export const checkUser=atom({
     key:"checkUser",
     default:false
 })
+
+export const channelDetails=atom({
+    key:"channelDetails",
+    default:null
+})

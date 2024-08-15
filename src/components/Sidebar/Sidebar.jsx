@@ -5,16 +5,18 @@ import Logout from '../logout/Logout';
 import { useRecoilValue } from 'recoil';
 import { checkUser } from '../../Store/atoms/userAtoms';
 import SignupLoginButton from '../signupLoginButton/SignupLoginButton';
+import { Link, useNavigate } from 'react-router-dom';
 
-const Sidebar = () => {
-  const [open, setOpen] = useState(false);
+const Sidebar = ({open,toggleDrawer}) => {
+  // const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const userStatus = useRecoilValue(checkUser);
-
-  const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
-    // console.log(userStatus)
-  };
+  const navigate=useNavigate()
+  
+  // const toggleDrawer = (newOpen) => () => {
+  //   setOpen(newOpen);
+  //   // console.log(userStatus)
+  // };
 
   const handleLogoutSuccess = () => {
     setSnackbarOpen(true);
@@ -134,14 +136,18 @@ const Sidebar = () => {
                     <ListItemText primary="Channel Stats" />
                   </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding>
-                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
-                    <ListItemIcon sx={{ color: '#fff' }}>
-                      <SubscriptionsIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Upload Video" />
-                  </ListItemButton>
-                </ListItem>
+                
+                  <ListItem disablePadding>
+                    <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }} onClick={()=>navigate('/upload-video')} >
+                      <ListItemIcon sx={{ color: '#fff' }}>
+                        
+                        <SubscriptionsIcon />
+                        
+                      </ListItemIcon>
+                      <ListItemText primary="Upload Video" />
+                    </ListItemButton>
+                  </ListItem>
+                
                 {/* <ListItem disablePadding> */}
                   {/* <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
                     <ListItemIcon sx={{ color: '#fff' }}>
@@ -204,9 +210,7 @@ const Sidebar = () => {
 
   return (
     <Box sx={{ margin: '0' }}>
-      <Button onClick={toggleDrawer(true)} sx={{ color: '#fff' }}>
-        <MenuIcon />
-      </Button>
+      
       <Drawer
         open={open}
         onClose={toggleDrawer(false)}

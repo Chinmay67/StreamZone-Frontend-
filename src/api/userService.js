@@ -4,21 +4,21 @@ import { useRecoilState } from 'recoil';
 import { userAtom } from '../Store/atoms/userAtoms';
 import axios from './axios'; // Import the configured Axios instance
 
-export const GetUserProfile = async () => {
-    const [currentUser, setCurrentUser] = useRecoilState(userAtom);
-    const userId=localStorage.getItem('userID')
-    try {
-        if(!currentUser && userId){
-            const response = await axios.get('/users/profile');
-            setCurrentUser(response.data.user)
-            return response.data.user;
-        }
+// export const GetUserProfile = async () => {
+//     const [currentUser, setCurrentUser] = useRecoilState(userAtom);
+//     const userId=localStorage.getItem('userID')
+//     try {
+//         if(!currentUser && userId){
+//             const response = await axios.get('/users/profile');
+//             setCurrentUser(response.data.user)
+//             return response.data.user;
+//         }
         
-    } catch (error) {
-        console.error('Error fetching user profile:', error);
-        return null;
-    }
-};
+//     } catch (error) {
+//         console.error('Error fetching user profile:', error);
+//         return null;
+//     }
+// };
 
 export const RegisterUser=async(formData)=>{
     
@@ -36,7 +36,8 @@ export const RegisterUser=async(formData)=>{
         return postNewUser.data;
        
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+        return error
       }
       
      
@@ -48,31 +49,57 @@ export const loginUser = async (email, password) => {
         console.log("user logged in sucessfully", response.data)
         return response.data;
     } catch (error) {
-        console.error('Error logging in:', error);
-        throw error;
+        // console.error('Error logging in:', error);
+        // throw error;
     }
 };
-
-export const getCurrentUser=async()=>{
+export const CurrentUser=async()=>{
     try {
 
         const response=await axios.get('/users/current-user') 
-        return response.data
+        console.log('getting current user',response.data)
+        return response.data.data
     } catch (error) {
-        return error.message
+        console.log(error)
+        // throw Error(error)
+        return null
     }
+}
+export const getCurrentUser=async()=>{
+    try{
+        const status=await axios.get('/users/check-token')
+        // console.log(status)
+        if(status.data.data==true){
+            try {
+
+                const response=await axios.get('/users/current-user') 
+                console.log('getting current user',response.data)
+                return response.data.data
+            } catch (error) {
+                // console.log(error)
+                return null
+            }
+        }
+        else{
+            // console.log(status,"response")
+            return null
+        }
+    }catch(error){
+        // console.log(error)
+    }
+   
 }
 
 export const refreshAccessToken = async () => {
     try {
         const response = await axios.post('/users/refresh-token');
-        const { accessToken } = response.data;
+        const { accessToken } = response.cookie;
 
         // No need to store the access token since it's managed via HTTP-only cookies
 
         return accessToken;
     } catch (error) {
-        console.error('Error refreshing access token:', error);
+        // console.error('Error refreshing access token:', error);
         return null;
     }
 };
@@ -89,25 +116,55 @@ export const logoutUser=async()=>{
 }
 
 
-export const refreshUser=async(currentUser,setCurrentUser)=>{
-    if(!currentUser){
-        const userProfile=getCurrentUser()
-        setCurrentUser(userProfile)
+// export const refreshUser=async(currentUser,setCurrentUser)=>{
+//     if(!currentUser){
+//         const userProfile=await getCurrentUser()
+//         setCurrentUser(userProfile)
+//     }
+//     else{
+//         return;
+//     }
+// }
+
+export const getChannelProfile=async(currentUser,setCurrentUser)=>{
+    if(currentUser===null){
+       try {
+        const response=await  getCurrentUser()
+        console.log("response in getting", response)
+        setCurrentUser(response)
+        console.log(currentUser)
+        // return response.data
+       } catch (error) {
+        console.log("error" ,error)
+       }
     }
-    else{
-        return;
+    try {
+        const response=await axios.get(`/users/c/${currentUser.username}`);
+        console.log('respone in get channel profile',response)
+        return response.data.data;
+    } catch (error) {
+        console.log("error" ,error)
+        return null;
     }
 }
 
-export const getChannelProfile=async(currentUser,setCurrentUser)=>{
-    if(!currentUser){
-        await refreshUser(currentUser,setCurrentUser)
-    }
+export const toggleChannelSubscription=async(channelId)=>{
+    console.log(channelId)
     try {
-        const response=await axios.get(`/users/c/${currentUser.data.username}`);
-        return response.data;
+        const response=await axios.post(`/subscriptions/c/${channelId}`)
+        return response
     } catch (error) {
         console.log(error)
     }
 }
+
+export const checkUserSubscription=async(channelId)=>{
+    try {
+        const response=await axios.get(`/subscriptions/subscriptionStatus/${channelId}`)
+        return response.data.data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 // Add more functions as needed

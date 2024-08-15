@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Container, Typography, TextField, FormControlLabel, Switch, Button, Box, IconButton, Grid, Card, CardMedia, CardContent } from '@mui/material';
+import { Container, Typography, TextField, FormControlLabel, Switch, Button, Box, IconButton, Grid, Card, CardMedia, CardContent, LinearProgress, CircularProgress, Stack } from '@mui/material';
 import { PhotoCamera, CloudUpload } from '@mui/icons-material';
 import { styled } from '@mui/system';
+import { uploadVideo } from '../../api/videoService';
+import { useNavigate } from 'react-router-dom';
 
 const Input = styled('input')({
   display: 'none',
@@ -15,6 +17,38 @@ const UploadPage = () => {
   const [video, setVideo] = useState(null);
   const [videoPreview, setVideoPreview] = useState('');
   const [isPublished, setIsPublished] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(2);
+  const navigate=useNavigate()
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('thumbnail', thumbnail);
+    formData.append('videoFile', video);
+    // formData.append('isPublished', isPublished);
+    console.log(formData);
+
+    setIsUploading(1);
+    setUploadProgress(0);
+
+    try {
+      const videoResponse = await uploadVideo(formData, (progressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        setUploadProgress(percentCompleted);
+      });
+      console.log(videoResponse);
+      setIsUploading(3);
+      setUploadProgress(0);
+      setTimeout(() => {
+        navigate('/channel')
+            }, 5000 );
+    } catch (error) {
+      console.log(error);
+      setIsUploading(2);
+    }
+  };
 
   const handleThumbnailChange = (e) => {
     const file = e.target.files[0];
@@ -28,21 +62,23 @@ const UploadPage = () => {
     setVideoPreview(URL.createObjectURL(file));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    console.log({
-      title,
-      description,
-      thumbnail,
-      video,
-      isPublished,
-    });
-  };
-
   return (
     <Container maxWidth="md" style={{ marginTop: '50px', backgroundColor: '#f5f5f5', padding: '30px', borderRadius: '10px', boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)' }}>
-      <Typography variant="h3" component="h1" align="center" gutterBottom style={{ color: '#3f51b5', fontWeight: 'bold' }}>
+      
+        {isUploading===1   &&  
+          <Box my={2}>
+            <Typography variant="body2" color="textSecondary" component="p" align="center">
+              Uploading: {uploadProgress}%
+            </Typography>
+            <LinearProgress variant="determinate" value={uploadProgress} />
+            <Box display="flex" justifyContent="center" mt={2}>
+              <CircularProgress />
+            </Box>
+          </Box>
+        }
+        {isUploading===2 && (
+          <>
+          <Typography variant="h3" component="h1" align="center" gutterBottom style={{ color: '#3f51b5', fontWeight: 'bold' }}>
         Upload Video
       </Typography>
       <form onSubmit={handleSubmit}>
@@ -139,7 +175,16 @@ const UploadPage = () => {
           Upload
         </Button>
       </form>
+          </>
+        )}
+      {isUploading===3 && <Stack>
+        <Typography>Video Uploaded Successfully</Typography>
+        <Button
+        onClick={()=>navigate('/channel')}>Channel Profile</Button>
+        </Stack>}  
+        
     </Container>
+    
   );
 };
 

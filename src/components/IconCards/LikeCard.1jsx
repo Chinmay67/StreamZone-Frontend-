@@ -1,0 +1,55 @@
+import React, { useState } from 'react'
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import { IconButton } from '@mui/material';
+import { ToggleVideoLike } from '../../api/videoService';
+import { toggleCommentLike } from '../../api/commentService';
+function LikeCard({id, isLiked, type}) {
+  const [liked,setLiked]=useState(isLiked)
+  const [likeState,setLikeState]=useState(0)
+  if(liked=={} ){
+    setLikeState(0)
+  }
+  else if(liked?.data?.likeType==="dislike"){
+    setLikeState(1)
+  }
+  console.log(liked)
+  const handleClick=async()=>{
+    // console.log(liked)
+    
+
+    // console.log(isLiked)
+    // console.log(type)
+    // console.log(id)
+    
+    const  likeType="like"
+    
+    if(type==="video"){
+      const response=await ToggleVideoLike(id,likeType);
+      setLiked(response)
+      console.log(response)
+    }
+    else if(type==="comment"){
+      const response=await toggleCommentLike(id,likeType)
+      setLiked(response)
+      console.log(response)
+    }
+  }
+  return (
+    <div onClick={handleClick}>
+    {likeState==1 &&
+        <IconButton color="primary"  >
+            <ThumbUpIcon/>
+        </IconButton>
+    } 
+    {likeState==0 && 
+    <IconButton >
+        <ThumbUpIcon/>
+    </IconButton>
+    }
+    
+
+</div>
+  )
+}
+
+export default LikeCard

@@ -34,4 +34,19 @@ const instance = axios.create({
 //     }
 // );
 
+
+// instance.interceptors.response.use(
+//     response => response,
+//     error => {
+//         if (error.response && error.response.statusCode === 401) {
+//             // Handle the unauthorized error globally
+//             console.log('Unauthorized access. Suppressing console error log.');
+//             // return new Promise(() => {});
+//             // Optionally, set a state or perform an action
+//         }
+//             // Allow other errors to be logged
+//             return Promise.reject(error);
+        
+//     }
+// );
 export default instance;

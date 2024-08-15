@@ -53,17 +53,27 @@ function Login() {
     try {
       const loggedUser = await loginUser(email, password);
       const loggedUserData = loggedUser.data.user;
-      setCurrentUser(loggedUserData);
-
-      setSuccessMessage('Logged in successfully');
-      localStorage.setItem('userID', loggedUserData._id);
-      setUserStatus(true);
-      setLoading(false);
-      setEmail('');
-      setPassword('');
+      if(loggedUser.statusCode>=400){
+        setErrorMessage(loggedUser.message);
+        setUserStatus(false)
       
-      navigate('/channel')
-      window.location.reload()
+      }
+      else{
+        setCurrentUser(loggedUserData);
+        setSuccessMessage('Logged in successfully');
+        localStorage.setItem('userID', loggedUserData._id);
+        setUserStatus(true);
+        setLoading(false);
+        setEmail('');
+        setPassword('');
+        navigate('/channel')
+
+      }
+      
+
+      
+      
+      // window.location.reload()
       
     } catch (error) {
       console.log(error);

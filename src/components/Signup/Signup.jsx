@@ -84,6 +84,7 @@ function Signup() {
   const [fullname, setFullName] = useState('');
   const [currentUser, setCurrentUser] = useRecoilState(userAtom);
   const setCheckUser = useSetRecoilState(checkUserAtom); // Use the correct atom
+
   const navigate=useNavigate();
   const handleAvatarUpload = (event) => {
     setAvatar(event.target.files[0]);

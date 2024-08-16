@@ -12,7 +12,7 @@ export const fetchOtherChannelProfile=async(channelName)=>{
 export const fetchOtherChannelVideos=async(channelName)=>{
     try {
         const response=await axios.get(`/free/videos/${channelName}`)
-        return response
+        return response.data.data
     } catch (error) {
         console.log(error)
     }

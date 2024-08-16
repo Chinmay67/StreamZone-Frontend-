@@ -46,7 +46,7 @@ const Sidebar = ({open,toggleDrawer}) => {
       <Box>
         <List>
           <ListItem disablePadding>
-            <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
+            <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }} onClick={()=>navigate('/')}>
               <ListItemIcon sx={{ color: '#fff' }}>
                 <ExploreIcon />
               </ListItemIcon>
@@ -54,7 +54,7 @@ const Sidebar = ({open,toggleDrawer}) => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
+            <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }} onClick={()=>navigate('/trending')}>
               <ListItemIcon sx={{ color: '#fff' }}>
                 <WhatshotIcon />
               </ListItemIcon>
@@ -80,7 +80,7 @@ const Sidebar = ({open,toggleDrawer}) => {
                   </ListItemButton>
                 </ListItem> */}
                 <ListItem disablePadding>
-                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
+                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }} >
                     <ListItemIcon sx={{ color: '#fff' }}>
                       <SubscriptionsIcon />
                     </ListItemIcon>
@@ -104,7 +104,7 @@ const Sidebar = ({open,toggleDrawer}) => {
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
+                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }} onClick={()=>navigate('/channel')}>
                     <ListItemIcon sx={{ color: '#fff' }}>
                       <AccountCircleIcon />
                     </ListItemIcon>

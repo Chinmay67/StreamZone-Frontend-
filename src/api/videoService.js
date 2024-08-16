@@ -37,6 +37,16 @@ export const getRandomVideos=async()=>{
     console.log(error)
   }
 }
+export const getTrendingVideos=async()=>{
+  try {
+    const response = await axios.get('/free/get-trending');
+    return response.data.data;
+    // console.log(response)
+  }
+  catch(error){
+    console.log(error)
+  }
+}
 
 export const getVideoChannel=async(formData)=>{
   try {

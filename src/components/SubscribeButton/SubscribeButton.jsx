@@ -1,49 +1,60 @@
-import { Button } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import { checkUser } from '../../Store/atoms/userAtoms'
-import { useRecoilValue } from 'recoil'
-import { checkUserSubscription, toggleChannelSubscription } from '../../api/userService'
+import React, { useEffect, useState } from 'react';
+import { Button, IconButton, useMediaQuery, useTheme } from '@mui/material';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import { checkUser } from '../../Store/atoms/userAtoms';
+import { useRecoilValue } from 'recoil';
+import { checkUserSubscription, toggleChannelSubscription } from '../../api/userService';
 
-function SubscribeButton(id) {
+function SubscribeButton({ id }) {
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-   
-   
-    console.log(id)
-    const channel=id;
-    const userStatus=useRecoilValue(checkUser)
-    const [isSubscribed, setIsSubscribed] = useState(false)
-    useEffect(()=>{
-      const fetchSubscription=async(channelId)=>{
+    const userStatus = useRecoilValue(checkUser);
+    const [isSubscribed, setIsSubscribed] = useState(false);
+
+    useEffect(() => {
+        const fetchSubscription = async (channelId) => {
+            try {
+                const response = await checkUserSubscription(channelId);
+                setIsSubscribed(response);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchSubscription(id);
+    }, [id]);
+
+    const handleToggleSubscriptions = async () => {
         try {
-          const response=await checkUserSubscription(channelId.id)
-          setIsSubscribed(response)
-          console.log(response)
+            const response = await toggleChannelSubscription(id);
+            setIsSubscribed(prev => !prev);
         } catch (error) {
-          console.log(error)
+            console.log(error);
         }
-      }
-      fetchSubscription(id)
+    };
 
-    },[id])
-    const handleToggleSubscriptions=async()=>{
-      console.log(channel.id)
-      try {
-        const response=await toggleChannelSubscription(channel.id)
-        console.log(response)
-        setIsSubscribed((prev)=>!prev)
-        return response
-      } catch (error) {
-        console.log(error)
-      } 
-    }
-  return (
-   
-      <Button onClick={handleToggleSubscriptions} variant="contained" color="secondary" disabled={userStatus===false ? true:false}>
-       {!isSubscribed && <>Subscribe </>}
-       {isSubscribed &&<>Subscribed</> }
-      </Button>
-   
-  )
+    return (
+        <>
+            {isSmallScreen ? (
+                <IconButton
+                    onClick={handleToggleSubscriptions}
+                    color={isSubscribed ? 'primary' : 'default'}
+                    disabled={!userStatus}
+                >
+                    <NotificationsIcon />
+                </IconButton>
+            ) : (
+                <Button
+                    onClick={handleToggleSubscriptions}
+                    variant="contained"
+                    color="secondary"
+                    disabled={!userStatus}
+                >
+                    {isSubscribed ? 'Subscribed' : 'Subscribe'}
+                </Button>
+            )}
+        </>
+    );
 }
 
-export default SubscribeButton
+export default SubscribeButton;

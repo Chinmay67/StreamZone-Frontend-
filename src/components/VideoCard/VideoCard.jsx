@@ -51,10 +51,7 @@ function VideoCard(video) {
                 </Typography>
                 
             </CardContent>
-            <CardActions>
-                <Button size="small">Share</Button>
-                
-            </CardActions>
+           
         </Card>
     )
 }

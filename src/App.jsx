@@ -17,6 +17,8 @@ import Upload from './components/UploadPage/Upload.jsx';
 import VideoPlay from './components/VideoPlay/VideoPlay.jsx';
 import VideoView from './components/VideoPlay/VideoView.jsx';
 import OtherChannelProfile from './components/ChannelProfile/OtherChannelProfile.jsx';
+import TrendingPage from './components/TrendingPage/TrendingPage.jsx';
+// import TrendingPage from './components/Sidebar/TrendingPage.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,6 +28,7 @@ const router = createBrowserRouter(
       <Route path='signup' element={<Signup />} />
       <Route path='login' element={<Login />} />
       <Route path='upload-video' element={<Upload/>} />
+      <Route path='trending' element={<TrendingPage/>}/>
       <Route path='play-video/:id' element={<VideoView/>}/>
       <Route path='play-video' element={<Homepage/>}/>
       <Route path='OtherChannel/:channelName' element={<OtherChannelProfile/>}/>

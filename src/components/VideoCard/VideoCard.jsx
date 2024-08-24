@@ -66,7 +66,7 @@ import { format } from 'timeago.js';
 import { useRecoilState } from 'recoil';
 import { videoAtom } from '../../Store/atoms/videoAtoms';
 import { useNavigate } from 'react-router-dom';
-import { Box } from '@mui/material';
+import { Avatar, Box, Stack } from '@mui/material';
 
 function VideoCard(video) {
     const createdAt = format(video.video.createdAt);
@@ -80,63 +80,73 @@ function VideoCard(video) {
 
     return (
         <Card 
-            sx={{
-                margin: "10px", 
-                boxShadow: "none", 
-                backgroundColor: "transparent", // Removes background color
-                borderRadius: "12px", 
-                width: "100%", 
-                overflow: "hidden",
-                transition: "transform 0.3s ease-in-out",
-                '&:hover': {
-                    transform: "scale(1.02)",
-                }
+        sx={{
+            margin: "8px", // Reduced margin between cards
+            boxShadow: "none", 
+            backgroundColor: "transparent", 
+            borderRadius: "12px", 
+            width: "95%",  // Adjusted width
+            height: "auto", // Adjusted height
+            overflow: "hidden",
+            transition: "transform 0.3s ease-in-out",
+            '&:hover': {
+                transform: "scale(1.02)",
+            }
+        }}
+    >
+        <Box sx={{ display: 'flex', justifyContent: 'center', padding: "5px" }}>
+            <CardMedia
+                component="img"
+                alt={video.video.title}
+                height="180"  // Slightly increased the height of the image
+                image={video.video.thumbnail}
+                onClick={handleVideoPlay}
+                sx={{
+                    cursor: "pointer",
+                    transition: "transform 0.3s ease-in-out",
+                    borderRadius: "10px", 
+                    '&:hover': {
+                        transform: "scale(1.1)",
+                        zIndex: 1,
+                    }
+                }}
+            />
+        </Box>
+        <CardContent 
+            sx={{ 
+                padding: "8px", // Adjusted padding to match the new dimensions
+                backgroundColor: "transparent",
             }}
         >
-            <Box sx={{ display: 'flex', justifyContent: 'center', padding: "5px" }}>
-                <CardMedia
-                    component="img"
-                    alt={video.video.title}
-                    height="160"
-                    image={video.video.thumbnail}
-                    onClick={handleVideoPlay}
-                    sx={{
-                        cursor: "pointer",
-                        transition: "transform 0.3s ease-in-out",
-                        borderRadius: "12px", // Keeps the image's border radius
-                        '&:hover': {
-                            transform: "scale(1.1)",
-                            zIndex: 1,
-                        }
-                    }}
-                />
-            </Box>
-            <CardContent 
-                sx={{ 
-                    padding: "10px",
-                    backgroundColor: "transparent", // Removes background color of CardContent
-                }}
-            >
-                <Typography 
-                    gutterBottom 
-                    variant="h6" 
-                    component="div"
-                    onClick={handleVideoPlay}
-                    sx={{
-                        cursor: "pointer",
-                        fontWeight: "bold",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        "&:hover": {
-                            textDecoration: "underline",
-                        }
-                    }}
-                >
-                    {video.video.title}
-                </Typography>
+        
+                <Stack direction="row" spacing={1} alignItems="center">
+                    <Avatar 
+                        alt={video.video.owner.username} 
+                        src={video.video.owner.avatar} 
+                        sx={{ cursor: "pointer", width: 32, height: 32 }}
+                        onClick={() => navigate(`/OtherChannel/${video.video.owner.username}`)}
+                    />
+                    <Typography 
+                        gutterBottom 
+                        variant="h6" 
+                        component="div"
+                        onClick={handleVideoPlay}
+                        sx={{
+                            cursor: "pointer",
+                            fontWeight: "bold",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                            "&:hover": {
+                                textDecoration: "underline",
+                            }
+                        }}
+                    >
+                        {video.video.title}
+                    </Typography>
+                </Stack>
                 <Typography 
                     variant="body2" 
                     color="text.secondary" 

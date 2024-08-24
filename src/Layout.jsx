@@ -9,7 +9,18 @@ import { LocalLaundryService } from '@mui/icons-material';
 
 const globalStyles = {
   body: {
-    background: 'linear-gradient(to bottom, #aedcff, #ffffff)', // Updated gradient background
+    
+    background: 'linear-gradient(135deg, #f9f9f9, #e6e6e6)',
+    
+    // background:'linear-gradient(135deg, #cfd9df, #e2ebf0)',
+    
+
+
+
+
+
+
+
     minHeight: '100vh',
     margin: 0,
     padding: 0,

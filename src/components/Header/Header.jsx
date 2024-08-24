@@ -1,5 +1,5 @@
 import { AppBar, Toolbar, styled, Box, Typography, InputBase, Avatar, CircularProgress, Button, IconButton, Stack } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Mail, Notifications } from '@mui/icons-material';
@@ -10,31 +10,35 @@ import Sidebar from '../Sidebar/Sidebar';
 import { useRecoilState } from 'recoil';
 import { checkUser, userAtom } from '../../Store/atoms/userAtoms';
 import SignupLoginButton from '../signupLoginButton/SignupLoginButton';
-import { getCurrentUser } from '../../api/userService';
 import Logout from '../logout/Logout';
 
 const StyledToolbar = styled(Toolbar)({
   display: "flex",
-  height:'8vh',
   justifyContent: "space-between",
-  backgroundColor: "#333",
-  
+  alignItems: "center",
+  height: '8vh',
+  backgroundColor: "#444",  // Updated color
+});
 
+const SearchContainer = styled(Box)({
+  flex: 1,
+  display: 'flex',
+  justifyContent: 'center',  // Centering the search bar
 });
 
 const Search = styled('div')(({ theme }) => ({
-  backgroundColor: "whiteSmoke",
-  padding: "05px 10px",
+  backgroundColor: "#f0f0f0",
+  padding: "5px 10px",
   borderRadius: theme.shape.borderRadius,
   width: "50%",
-  display:'flex',
-  alignItems:'center'
+  display: 'flex',
+  alignItems: 'center',
 }));
 
 const Inp = styled(InputBase)({
-  margin: "0px 0px",
-  backgroundColor: "whiteSmoke",
-  padding: "-2px 10px",
+  margin: "0px",
+  backgroundColor: "transparent",
+  padding: "0 10px",
   width: "100%",
 });
 
@@ -58,40 +62,14 @@ const UserBox = styled(Box)(({ theme }) => ({
 
 function Header() {
   const [open, setOpen] = useState(false);
-  const [sidebarOpen,setSidebarOpen]=useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userStatus, setUserStatus] = useRecoilState(checkUser);
   const [currentUser, setCurrentUser] = useRecoilState(userAtom);
   const [loading, setLoading] = useState(false);
 
-  const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
-    // console.log(userStatus)
+  const toggleSidebarDrawer = (newOpen) => () => {
+    setSidebarOpen(newOpen);
   };
-  const toggleSidebarDrawer=(newSidebarOpen)=>()=>{
-    setSidebarOpen(newSidebarOpen)
-  }
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //       setLoading(true)
-  //       const user = await getCurrentUser();
-  //       setCurrentUser(user);
-  //       if(user===null){
-  //         setUserStatus(false)
-  //       }
-  //       else{
-  //         setUserStatus(true)
-  //       }
-  //     } catch (error) {
-  //       console.log("Error fetching user:", error);
-  //       setUserStatus(false);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchUser();
-  // }, [setCurrentUser, setUserStatus]);
 
   if (loading) {
     return (
@@ -102,27 +80,34 @@ function Header() {
   }
 
   return (
-    <AppBar position='sticky' margin-bottom='5px'>
+    <AppBar position='sticky'>
       <StyledToolbar>
-      <Stack direction='row'>
-        <Button onClick={toggleSidebarDrawer(true)} sx={{color:"#fff"}}>
+        <Stack direction='row'>
+          <IconButton onClick={toggleSidebarDrawer(true)} sx={{ color: "#fff" }}>
             <MenuIcon />
-          </Button>
-          <Typography variant='h6' sx={{ display: { xs: "none", sm: "block" } }}>
+          </IconButton>
+          <Typography variant='h6' sx={{ display: { xs: "none", sm: "block" }, color: "#fff" }}>
             NewTube
           </Typography>
-          </Stack>
+        </Stack>
         <Sidebar open={sidebarOpen} toggleDrawer={toggleSidebarDrawer} />
-        <SlowMotionVideoOutlinedIcon sx={{ display: { xs: "block", sm: "none" } }} />
-        <Search><Inp placeholder="Search..." /><SearchIcon sx={{color:"black"}}/> </Search>
+        <SlowMotionVideoOutlinedIcon sx={{ display: { xs: "block", sm: "none" }, color: "#fff" }} />
+
+        <SearchContainer>
+          <Search>
+            <Inp placeholder="Search..." />
+            <SearchIcon sx={{ color: "black" }} />
+          </Search>
+        </SearchContainer>
+
         {userStatus ? (
           <>
             <Icons>
               <Badge badgeContent={4} color="error">
-                <Mail />
+                <Mail sx={{ color: "#fff" }} />
               </Badge>
               <Badge badgeContent={2} color="error">
-                <Notifications />
+                <Notifications sx={{ color: "#fff" }} />
               </Badge>
               <Avatar
                 src={currentUser.avatar}
@@ -131,8 +116,8 @@ function Header() {
               />
             </Icons>
             <UserBox onClick={e => setOpen(true)}>
-              <Avatar sx={{ width: 30, height: 30 , display:{xs:"none" , sx:"block"}}} />
-              <Typography variant='span'>{currentUser.username}</Typography>
+              <Avatar sx={{ width: 30, height: 30 }} />
+              <Typography variant='span' sx={{ color: "#fff" }}>{currentUser.username}</Typography>
             </UserBox>
             <Menu
               id="demo-positioned-menu"
@@ -150,7 +135,7 @@ function Header() {
             >
               <MenuItem>Profile</MenuItem>
               <MenuItem>My account</MenuItem>
-              <MenuItem><Logout/></MenuItem>
+              <MenuItem><Logout /></MenuItem>
             </Menu>
           </>
         ) : (

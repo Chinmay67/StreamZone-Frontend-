@@ -65,8 +65,8 @@ function Homepage() {
         >
             <Grid 
                 container 
-                spacing={2}  // Space between video cards
-                justifyContent="center"  // Centering the grid content
+                spacing={1.5}  // Space between video cards
+                // justifyContent="center"  // Centering the grid content
             >
                 {videoResponse.length > 0 && videoResponse.map((video, index) => (
                     <Grid 

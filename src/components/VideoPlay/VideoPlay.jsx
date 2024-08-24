@@ -208,7 +208,7 @@ function VideoPlay() {
     
   return (
     <ThemeProvider theme={theme}>
-    <Box sx={{ padding: 2, backgroundColor: theme.palette.background.default }}>
+    <Box sx={{ padding: 2 }}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
           <Box>

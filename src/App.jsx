@@ -22,6 +22,7 @@ import { Box, CircularProgress } from '@mui/material';
 import Studio from './components/Studio/Studio.jsx';
 import EditVideo from './components/Studio/EditVideo/EditVideo.jsx';
 import EditChannelDetails from './components/Studio/EditChanneDetails/EditChannelDetails.jsx';
+import UserSubscriptions from './components/channelProfileCard/UserSubscriptions.jsx';
 // import TrendingPage from './components/Sidebar/TrendingPage.jsx';
 
 const router = createBrowserRouter(
@@ -39,6 +40,7 @@ const router = createBrowserRouter(
       <Route path='studio' element={<Studio/>}/> 
        <Route path='studio/edit-videos' element={<EditVideo/>}/>
        <Route path='studio/edit-channel' element={<EditChannelDetails/>}/>
+       <Route path='user-subscriptions' element={<UserSubscriptions/>}/>
       {/* <Route path='otherProfile' element={<OtherChannel/>}/> */}
     </Route>
   )

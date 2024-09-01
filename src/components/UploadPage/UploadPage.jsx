@@ -102,7 +102,7 @@ const UploadPage = () => {
           onChange={(e) => setDescription(e.target.value)}
           required
         />
-        <FormControlLabel
+        {/* <FormControlLabel
           control={
             <Switch
               checked={isPublished}
@@ -112,7 +112,7 @@ const UploadPage = () => {
           }
           label="Published"
           style={{ marginTop: '10px', marginBottom: '20px' }}
-        />
+        /> */}
         <Grid container spacing={3} alignItems="center">
           <Grid item xs={12} sm={6}>
             <label htmlFor="thumbnail-upload">

@@ -172,7 +172,7 @@ export const checkUserSubscription=async(channelId)=>{
 export const getUserSubscriptions=async()=>{
     try {
         const response=await axios.get("/subscriptions/user-subscriptions")
-        return response
+        return response.data.data
     } catch (error) {
         return error
     }

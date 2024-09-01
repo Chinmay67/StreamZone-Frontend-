@@ -8,7 +8,7 @@ import SignupLoginButton from '../signupLoginButton/SignupLoginButton';
 import { Link, useNavigate } from 'react-router-dom';
 import { getChannelStats } from '../../api/studioService';
 import ChannelStatDialogbox from '../stats/ChannelStatDialogbox';
-
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 const Sidebar = ({open,toggleDrawer}) => {
   // const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -96,7 +96,7 @@ const Sidebar = ({open,toggleDrawer}) => {
                   </ListItemButton>
                 </ListItem> */}
                 <ListItem disablePadding>
-                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }} >
+                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }} onClick={()=>navigate("/user-subscriptions")} >
                     <ListItemIcon sx={{ color: '#fff' }}>
                       <SubscriptionsIcon />
                     </ListItemIcon>
@@ -132,7 +132,7 @@ const Sidebar = ({open,toggleDrawer}) => {
                     <ListItemIcon sx={{ color: '#fff' }}>
                       <ThumbUpIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Liked Videos" />
+                    <ListItemText primary="Edit Videos" />
                   </ListItemButton>
                 </ListItem> */}
               </List>
@@ -163,7 +163,26 @@ const Sidebar = ({open,toggleDrawer}) => {
                       <ListItemText primary="Upload Video" />
                     </ListItemButton>
                   </ListItem>
-                
+                  <ListItem disablePadding>
+                    <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }} onClick={()=>navigate('/studio/edit-videos')} >
+                      <ListItemIcon sx={{ color: '#fff' }}>
+                        
+                        <DriveFileRenameOutlineIcon />
+                        
+                      </ListItemIcon>
+                      <ListItemText primary="Edit Video" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }} onClick={()=>navigate('/studio/edit-channel')} >
+                      <ListItemIcon sx={{ color: '#fff' }}>
+                        
+                        <DriveFileRenameOutlineIcon />
+                        
+                      </ListItemIcon>
+                      <ListItemText primary="Edit Channel" />
+                    </ListItemButton>
+                  </ListItem>
                 {/* <ListItem disablePadding> */}
                   {/* <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
                     <ListItemIcon sx={{ color: '#fff' }}>

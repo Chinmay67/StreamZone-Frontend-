@@ -69,3 +69,12 @@ export const editUserCoverImage=async(coverImage)=>{
         return error
     }
 }
+
+export const getChannelStats=async()=>{
+    try {
+       const response=await axios.get("/stats/studio/channel-stats")
+       return  response.data.data 
+    } catch (error) {
+        return error
+    }
+}

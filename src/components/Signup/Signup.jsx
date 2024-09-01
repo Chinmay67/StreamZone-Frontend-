@@ -111,25 +111,34 @@ function Signup() {
     try {
       const userDetails = await RegisterUser(formData);
       const userData = userDetails.data;
-      SetNewUser(userData);
-
-      const loggedUser = await loginUser(email, password);
-      const loggedUserData = loggedUser.data.user;
-      setCurrentUser(loggedUserData);
-      // localStorage.setItem('userID', loggedUserData._id);
-      setCheckUser(true); // Use boolean true instead of string "true"
-      setSuccessMessage('Registration done and logged in successfully');
-      setAvatar(null);
-      setCoverImage(null);
-      setUserName('');
-      setEmail('');
-      setPassword('');
-      setFullName('');
-      navigate('/channel')
+      
+      console.log(userDetails)
+      if(userDetails.status===200){
+        const loggedUser = await loginUser(email, password);
+        const loggedUserData = loggedUser.data.user;
+        SetNewUser(userData);
+        setCurrentUser(loggedUserData);
+        // localStorage.setItem('userID', loggedUserData._id);
+        setCheckUser(true); // Use boolean true instead of string "true"
+        setSuccessMessage('Registration done and logged in successfully');
+        setAvatar(null);
+        setCoverImage(null);
+        setUserName('');
+        setEmail('');
+        setPassword('');
+        setFullName('');
+        navigate('/channel')
+      }
+      else if(userDetails.status===400){
+        setErrorMessage( 'All fields are required except coverImage');
+      }
+      else if(userDetails.status===409){
+        setErrorMessage('Email or username already exists');
+      }
 
     } catch (error) {
       console.log(error);
-      setErrorMessage(error.response?.data?.message || 'Registration failed');
+      
     } finally {
       setLoading(false);
     }

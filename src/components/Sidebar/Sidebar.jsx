@@ -6,11 +6,15 @@ import { useRecoilValue } from 'recoil';
 import { checkUser } from '../../Store/atoms/userAtoms';
 import SignupLoginButton from '../signupLoginButton/SignupLoginButton';
 import { Link, useNavigate } from 'react-router-dom';
+import { getChannelStats } from '../../api/studioService';
+import ChannelStatDialogbox from '../stats/ChannelStatDialogbox';
 
 const Sidebar = ({open,toggleDrawer}) => {
   // const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [statOpen, setStatOpen]=useState(false)
   const userStatus = useRecoilValue(checkUser);
+  const [channelStat,setChannelStat]=useState(null)
   const navigate=useNavigate()
   
   // const toggleDrawer = (newOpen) => () => {
@@ -21,7 +25,19 @@ const Sidebar = ({open,toggleDrawer}) => {
   const handleLogoutSuccess = () => {
     setSnackbarOpen(true);
   };
-
+  const handleStatDialogBox=async()=>{
+    try {
+      const response=await getChannelStats()
+      console.log(response)
+      setChannelStat(response)
+      setStatOpen(true)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const handleStatDialogBoxClose=()=>{
+    setStatOpen(false)
+  }
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -87,22 +103,22 @@ const Sidebar = ({open,toggleDrawer}) => {
                     <ListItemText primary="Subscriptions" />
                   </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding>
+                {/* <ListItem disablePadding>
                   <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
                     <ListItemIcon sx={{ color: '#fff' }}>
                       <PlaylistPlayIcon />
                     </ListItemIcon>
                     <ListItemText primary="Playlists" />
                   </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
+                </ListItem> */}
+                {/* <ListItem disablePadding>
                   <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
                     <ListItemIcon sx={{ color: '#fff' }}>
                       <HistoryIcon />
                     </ListItemIcon>
                     <ListItemText primary="Watch History" />
                   </ListItemButton>
-                </ListItem>
+                </ListItem> */}
                 <ListItem disablePadding>
                   <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }} onClick={()=>navigate('/channel')}>
                     <ListItemIcon sx={{ color: '#fff' }}>
@@ -111,14 +127,14 @@ const Sidebar = ({open,toggleDrawer}) => {
                     <ListItemText primary="Channel Profile" />
                   </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding>
+                {/* <ListItem disablePadding>
                   <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
                     <ListItemIcon sx={{ color: '#fff' }}>
                       <ThumbUpIcon />
                     </ListItemIcon>
                     <ListItemText primary="Liked Videos" />
                   </ListItemButton>
-                </ListItem>
+                </ListItem> */}
               </List>
               <Divider sx={{ borderColor: '#555' }} />
               <List>
@@ -129,7 +145,7 @@ const Sidebar = ({open,toggleDrawer}) => {
                 </ListItem>
                 <Divider sx={{ borderColor: '#555' }} />
                 <ListItem disablePadding>
-                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
+                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }} onClick={handleStatDialogBox}>
                     <ListItemIcon sx={{ color: '#fff' }}>
                       <BarChartIcon />
                     </ListItemIcon>
@@ -209,27 +225,30 @@ const Sidebar = ({open,toggleDrawer}) => {
   );
 
   return (
-    <Box sx={{ margin: '0' }}>
-      
-      <Drawer
-        open={open}
-        onClose={toggleDrawer(false)}
-        PaperProps={{
-          sx: {
-            backgroundColor: '#1a1a1a',
-            color: '#fff',
-            transition: 'width 0.3s',
-          },
-        }}
-      >
-        {DrawerList}
-      </Drawer>
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
-          Logged out successfully!
-        </Alert>
-      </Snackbar>
-    </Box>
+    <>
+      <Box sx={{ margin: '0' }}>
+        
+        <Drawer
+          open={open}
+          onClose={toggleDrawer(false)}
+          PaperProps={{
+            sx: {
+              backgroundColor: '#1a1a1a',
+              color: '#fff',
+              transition: 'width 0.3s',
+            },
+          }}
+        >
+          {DrawerList}
+        </Drawer>
+        <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+          <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+            Logged out successfully!
+          </Alert>
+        </Snackbar>
+      </Box>
+      <ChannelStatDialogbox open={statOpen} handleClose={handleStatDialogBoxClose} userStats={channelStat}/>
+    </>
   );
 };
 

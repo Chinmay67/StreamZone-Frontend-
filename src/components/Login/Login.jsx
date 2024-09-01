@@ -52,13 +52,23 @@ function Login() {
 
     try {
       const loggedUser = await loginUser(email, password);
-      const loggedUserData = loggedUser.data.user;
-      if(loggedUser.statusCode>=400){
-        setErrorMessage(loggedUser.message);
+      console.log(loggedUser)
+      if(loggedUser.status===400){
+        setErrorMessage("username and email are required");
         setUserStatus(false)
       
       }
+      else if(
+        loggedUser.status===404
+      ){
+        setErrorMessage("user does not exist")
+      }
+      else if(loggedUser.status===401){
+        setErrorMessage("wrong password")
+      }
       else{
+        const loggedUserData = loggedUser.data.user;
+
         setCurrentUser(loggedUserData);
         setSuccessMessage('Logged in successfully');
         localStorage.setItem('userID', loggedUserData._id);

@@ -32,12 +32,12 @@ export const RegisterUser=async(formData)=>{
             }
             
         )
-        console.log("user uploaded successfully",postNewUser.data)
+        // console.log("user uploaded successfully",postNewUser.data)
         return postNewUser.data;
        
       } catch (error) {
         // console.log(error)
-        return error
+        return error.response
       }
       
      
@@ -51,6 +51,7 @@ export const loginUser = async (email, password) => {
     } catch (error) {
         // console.error('Error logging in:', error);
         // throw error;
+        return error.response
     }
 };
 export const CurrentUser=async()=>{
@@ -168,4 +169,12 @@ export const checkUserSubscription=async(channelId)=>{
     }
 }
 
+export const getUserSubscriptions=async()=>{
+    try {
+        const response=await axios.get("/subscriptions/user-subscriptions")
+        return response
+    } catch (error) {
+        return error
+    }
+}
 // Add more functions as needed

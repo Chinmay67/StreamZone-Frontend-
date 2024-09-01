@@ -15,7 +15,7 @@ const StudioDashboard = () => {
     {
       title: 'Edit Channel Profile',
       icon: <Edit fontSize="large" />,
-      action: () => alert('Edit Channel Profile Clicked'),
+      action: () => navigate('/studio/edit-channel'),
       text:"Edit Channel avatar, coverImage and personal Profile details"
     },
     {

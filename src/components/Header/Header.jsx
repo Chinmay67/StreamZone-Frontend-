@@ -116,7 +116,7 @@ function Header() {
               />
             </Icons>
             <UserBox onClick={e => setOpen(true)}>
-              <Avatar sx={{ width: 30, height: 30 }} />
+              
               <Typography variant='span' sx={{ color: "#fff" }}>{currentUser.username}</Typography>
             </UserBox>
             <Menu

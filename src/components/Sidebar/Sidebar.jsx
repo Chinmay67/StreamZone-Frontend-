@@ -123,7 +123,7 @@ const Sidebar = ({open,toggleDrawer}) => {
               <Divider sx={{ borderColor: '#555' }} />
               <List>
                 <ListItem disablePadding>
-                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }}>
+                  <ListItemButton sx={{ '&:hover': { backgroundColor: '#333' } }} onClick={()=>navigate('/studio')}>
                     <ListItemText primary="Studio" />
                   </ListItemButton>
                 </ListItem>
@@ -199,7 +199,7 @@ const Sidebar = ({open,toggleDrawer}) => {
                 <ListItemIcon sx={{ color: '#fff' }}>
                   <ExitToAppIcon />
                 </ListItemIcon>
-                <Logout onLogout={handleLogoutSuccess} />
+                <Logout />
               </ListItemButton>
             </ListItem>
           </List>

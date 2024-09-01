@@ -10,7 +10,7 @@ import {  getCurrentUser } from './api/userService.js';
 import { checkUser, userAtom } from './Store/atoms/userAtoms.jsx';
 // import Test from './components/ChannelProfile/Test.jsx';
 // import UploadPage from './components/UploadPage/UploadPage.jsx';
-import { Box, CircularProgress } from '@mui/material';
+
 import Upload from './components/UploadPage/Upload.jsx';
 // import VideoPlay from './components/VideoPlay/VideoPlay.jsx';
 // import VideoView from './components/VideoPlay/VideoView.jsx';
@@ -18,8 +18,10 @@ import VideoPlay from './components/VideoPlay/VideoPlay.jsx';
 import VideoView from './components/VideoPlay/VideoView.jsx';
 import OtherChannelProfile from './components/ChannelProfile/OtherChannelProfile.jsx';
 import TrendingPage from './components/TrendingPage/TrendingPage.jsx';
+import { Box, CircularProgress } from '@mui/material';
 import Studio from './components/Studio/Studio.jsx';
 import EditVideo from './components/Studio/EditVideo/EditVideo.jsx';
+import EditChannelDetails from './components/Studio/EditChanneDetails/EditChannelDetails.jsx';
 // import TrendingPage from './components/Sidebar/TrendingPage.jsx';
 
 const router = createBrowserRouter(
@@ -34,8 +36,9 @@ const router = createBrowserRouter(
       <Route path='play-video/:id' element={<VideoView/>}/>
       <Route path='play-video' element={<Homepage/>}/>
       <Route path='OtherChannel/:channelName' element={<OtherChannelProfile/>}/>
-      <Route path='studio' element={<Studio/>}/>
-      <Route path='studio/edit-videos' element={<EditVideo/>}/>
+      <Route path='studio' element={<Studio/>}/> 
+       <Route path='studio/edit-videos' element={<EditVideo/>}/>
+       <Route path='studio/edit-channel' element={<EditChannelDetails/>}/>
       {/* <Route path='otherProfile' element={<OtherChannel/>}/> */}
     </Route>
   )

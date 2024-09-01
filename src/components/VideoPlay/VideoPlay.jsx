@@ -21,6 +21,7 @@ import CommentCard from '../CommentCard/CommentCard';
 
 import { LikeCard,DislikeCard } from '../IconCards/LikeDislikeButtons';
 import SubscribeButton from '../SubscribeButton/SubscribeButton';
+import { getSubscriberCount } from '../../api/free';
 
 const theme = createTheme({
   palette: {
@@ -56,6 +57,8 @@ function VideoPlay() {
       const [currentVideo,setCurrentVideo]=useRecoilState(videoAtom)
       // const [currentUser,setCurrentUser]=useRecoilState(userAtom)
       const [commentCreated,setCommentCreated]=useState(false)
+      const [videoLikes,setVideoLikes]=useState(0)
+      const [videoDislikes,setVideoDislikes]=useState(0)
       const [createdAt,setCreateAt]=useState('');
       const video="video"
       const videoRef = useRef(null);
@@ -74,9 +77,9 @@ function VideoPlay() {
       const fetchComments=async(id)=>{
         try {
           const response=await getVideoComments(id);
-          // console.log(response);
+          console.log(response);
           setComments(response)
-          console.log(comments)
+          // console.log(comments)
         }
         catch(error){
           console.log(error)
@@ -100,13 +103,24 @@ function VideoPlay() {
         try {
           const response=await getVideoById(id);
           console.log(response)
-          setCurrentVideo(response)
+          setCurrentVideo(response.video)
           // console.log(currentVideo)
-          
+          setVideoDislikes(response.dislikes)
+          setVideoLikes(response.likes)
         } catch (error) {
           console.log(error)
         }
+        
       }
+      if(id){
+        fetchCurrentVideo(id)
+        // console.log(currentVideo)
+        const created=format(currentVideo?.createdAt)
+        setCreateAt(created) 
+      }
+    },[setCurrentVideo,id,liked])
+    useEffect(()=>{
+      
       const fetchVideoLike=async(id,userStatus)=>{
         if(userStatus){
           try {
@@ -125,16 +139,13 @@ function VideoPlay() {
         try {
           fetchVideoLike(id,userStatus)
           // console.log("id after reload",id)
-          fetchCurrentVideo(id)
-          // console.log(currentVideo)
-          const created=format(currentVideo?.createdAt)
-          setCreateAt(created) 
+          
         } catch (error) {
           console.log(error)
         }
       }
       
-    },[id,setCurrentVideo,setLiked,userStatus])
+    },[setLiked,userStatus])
     useEffect(()=>{
       
      if(commentCreated){
@@ -191,7 +202,7 @@ function VideoPlay() {
         };
         // If 50% of the video has been watched, update view count
         if (watchedTime >= videoElement.duration * 0.5) {
-          updateViewCount(currentVideo._id);
+          updateViewCount(currentVideo?._id);
           videoElement.removeEventListener('timeupdate', handleTimeUpdate); // Stop tracking
         }
        
@@ -223,18 +234,31 @@ function VideoPlay() {
               <CardContent>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Typography variant="h5">{currentVideo?.title}</Typography>
-                  <Box>
-                    {/* <LikeCard id={id} isLiked={liked} type={video} />
-                    <DislikeCard  id={id} isLiked={liked} type={video}/> */}
+                  {/* <Box>
+                   
                   
                  
-                      <LikeCard id={id} isLiked={liked} type={video} onToggleLike={(newLiked) => setLiked(newLiked)} disabled />
-                      <DislikeCard id={id} isLiked={liked} type={video} onToggleDislike={(newLiked) => setLiked(newLiked)} disabled/>
+                      <Typography>{currentVideo?.likes}</Typography><LikeCard id={id} isLiked={liked} type={video} onToggleLike={(newLiked) => setLiked(newLiked)} disabled />
+                      <Typography>{currentVideo?.dislikes}</Typography><DislikeCard id={id} isLiked={liked} type={video} onToggleDislike={(newLiked) => setLiked(newLiked)} disabled/>
                     
 
                       
+                    <SubscribeButton id={currentVideo?.video.owner?._id} />
+                  </Box> */}
+                   <Stack direction="row" alignItems="center" sx={{ marginY: 2 }}>
+                    {/* Like button and number */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', marginRight: 3 }}>
+                      <LikeCard id={id} isLiked={liked} type={video} onToggleLike={(newLiked) => setLiked(newLiked)} />
+                      <Typography sx={{ marginLeft: 0.5 }}>{videoLikes}</Typography>
+                    </Box>
+                    {/* Dislike button and number */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', marginRight: 3 }}>
+                      <DislikeCard id={id} isLiked={liked} type={video} onToggleDislike={(newLiked) => setLiked(newLiked)} />
+                      <Typography sx={{ marginLeft: 0.5 }}>{videoDislikes}</Typography>
+                    </Box>
+                    {/* Subscribe button */}
                     <SubscribeButton id={currentVideo?.owner?._id} />
-                  </Box>
+                  </Stack>
                 </Box>
                 <Stack direction='row' spacing={1}>
             
@@ -254,8 +278,10 @@ function VideoPlay() {
                 </Typography>
                 <Divider/>
                 <Typography variant="body1" sx={{ marginTop: 2 }}>
+                  <Typography variant='h6'>Description</Typography>
                   {currentVideo?.description}
                 </Typography>
+                <Divider/>
                 <Box component="form" sx={{ display: 'flex', flexDirection: 'column', marginY: 2 }}>
                     {userStatus===true ? (<>
                       <TextField
@@ -272,11 +298,11 @@ function VideoPlay() {
                       <SignupLoginButton/>
                     )}
                 </Box>
-                {comments.length===0 ?(
+                {comments?.length===0 ?(
                   <Typography variant="h5" color="text.primary" sx={{ margin:'auto'}}>No Comments Yet!!</Typography>
                 ):(
                  <>
-                  {comments.map((comment, index) => (
+                  {comments?.map((comment, index) => (
                     <CommentCard key={index} comment={comment}/>
                   ))}
                   </>

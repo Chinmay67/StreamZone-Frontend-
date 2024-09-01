@@ -4,6 +4,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { checkUser } from '../../Store/atoms/userAtoms';
 import { useRecoilValue } from 'recoil';
 import { checkUserSubscription, toggleChannelSubscription } from '../../api/userService';
+import { getSubscriberCount } from '../../api/free';
 
 function SubscribeButton({ id }) {
     const theme = useTheme();
@@ -17,6 +18,7 @@ function SubscribeButton({ id }) {
             try {
                 const response = await checkUserSubscription(channelId);
                 setIsSubscribed(response);
+                console.log(response)
             } catch (error) {
                 console.log(error);
             }
@@ -32,7 +34,19 @@ function SubscribeButton({ id }) {
             console.log(error);
         }
     };
-
+    useEffect(()=>{
+        const fetchChannelSubscriberCount=async(id)=>{
+          try {
+            const response=await getSubscriberCount(id);
+            console.log(response)
+            return response;
+           
+          } catch (error) {
+            console.log(error)
+          }
+        }
+        fetchChannelSubscriberCount(id)
+      },[id])
     return (
         <>
             {isSmallScreen ? (

@@ -48,6 +48,7 @@ function Channel() {
       try {
         const response = await getUserVideos();
         setVideos(response.data);
+        console.log(response)
       } catch (error) {
         console.log(error);
       }
@@ -110,13 +111,36 @@ function Channel() {
 
       <Divider orientation="horizontal" variant="middle" sx={{ margin: "30px" }} />
 
-      <Grid container spacing={0.2}>
-        {videos.length > 0 && videos.map((video, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-            <VideoCard video={video} />
-          </Grid>
-        ))}
-      </Grid>
+      <Box 
+            sx={{
+                padding: "20px",
+                overflow: "hidden",
+            }}
+        >
+            <Grid 
+                container 
+                spacing={1.5}  
+                // justifyContent="center"  
+            >
+                {videos.length > 0 && videos.map((video, index) => (
+                    <Grid 
+                        item 
+                        xs={12} 
+                        sm={6} 
+                        md={4} 
+                        lg={3} 
+                        xl={2.4} 
+                        key={index}
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <VideoCard video={video} />
+                    </Grid>
+                ))}
+            </Grid>
+        </Box>
       {videos.length===0 && 
       <Button onClick={()=>navigate('/upload-video')}>Upload your first Video</Button>}
     </>

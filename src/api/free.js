@@ -17,3 +17,12 @@ export const fetchOtherChannelVideos=async(channelName)=>{
         console.log(error)
     }
 }
+
+export const getSubscriberCount=async(id)=>{
+    try {
+        const response=await axios.get(`/free/subscriberCount/${id}`)
+        return response
+    } catch (error) {
+        return error
+    }
+}

@@ -48,6 +48,7 @@ function Homepage() {
             try {
                 const response = await getRandomVideos();
                 setVideoResponse(response);
+                console.log(response)
             } catch (error) {
                 console.log("Error fetching videos", error);
             }
@@ -65,17 +66,18 @@ function Homepage() {
         >
             <Grid 
                 container 
-                spacing={1.5}  // Space between video cards
-                // justifyContent="center"  // Centering the grid content
+                spacing={1.5}  
+                // justifyContent="center"  
             >
                 {videoResponse.length > 0 && videoResponse.map((video, index) => (
+                    
                     <Grid 
                         item 
                         xs={12} 
                         sm={6} 
                         md={4} 
                         lg={3} 
-                        xl={2.4} // Ensure 5 videos per row on full-size screens
+                        xl={2.4} 
                         key={index}
                         sx={{
                             display: "flex",

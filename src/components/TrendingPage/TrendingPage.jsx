@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import VideoCard from '../VideoCard/VideoCard';
 import { getTrendingVideos } from '../../api/videoService';
@@ -24,13 +24,36 @@ function TrendingPage() {
     console.log(videoResponse);  // Debug: Ensure state is updated
 
     return (
-        <Grid container spacing={0.2}>
-            {videoResponse.length > 0 && videoResponse.map((video, index) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                    <VideoCard video={video} />
-                </Grid>
-            ))}
-        </Grid>
+        <Box 
+            sx={{
+                padding: "20px",
+                overflow: "hidden",
+            }}
+        >
+            <Grid 
+                container 
+                spacing={1.5}  
+                // justifyContent="center"  
+            >
+                {videoResponse.length > 0 && videoResponse.map((video, index) => (
+                    <Grid 
+                        item 
+                        xs={12} 
+                        sm={6} 
+                        md={4} 
+                        lg={3} 
+                        xl={2.4} 
+                        key={index}
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <VideoCard video={video} />
+                    </Grid>
+                ))}
+            </Grid>
+        </Box>
     );
   
 }

@@ -1,56 +1,56 @@
-// import React, { useEffect, useState } from 'react'
-// import { useRecoilValue } from 'recoil'
-// import { checkUser } from '../../../Store/atoms/userAtoms'
-// import SignupLoginButton from '../../signupLoginButton/SignupLoginButton'
-// import { getUserVideos } from '../../../api/videoService'
-// import { Box, Button, Stack } from '@mui/material'
-// import HorizontalVideoCard from '../../VideoCard/HorizontalVideoCard'
-// // import { WidthFull } from '@mui/icons-material'
+// // import React, { useEffect, useState } from 'react'
+// // import { useRecoilValue } from 'recoil'
+// // import { checkUser } from '../../../Store/atoms/userAtoms'
+// // import SignupLoginButton from '../../signupLoginButton/SignupLoginButton'
+// // import { getUserVideos } from '../../../api/videoService'
+// // import { Box, Button, Stack } from '@mui/material'
+// // import HorizontalVideoCard from '../../VideoCard/HorizontalVideoCard'
+// // // import { WidthFull } from '@mui/icons-material'
 
-// function EditVideo() {
-//     const userStatus=useRecoilValue(checkUser)
-//     const [videos,setVideos]=useState([])
-//     useEffect(()=>{
-//         const fetchUserVideos=async()=>{
-//             if(userStatus){
-//                 try {
-//                     const response=await getUserVideos();
-//                     console.log(response)
-//                     setVideos(response.data)
+// // function EditVideo() {
+// //     const userStatus=useRecoilValue(checkUser)
+// //     const [videos,setVideos]=useState([])
+// //     useEffect(()=>{
+// //         const fetchUserVideos=async()=>{
+// //             if(userStatus){
+// //                 try {
+// //                     const response=await getUserVideos();
+// //                     console.log(response)
+// //                     setVideos(response.data)
 
-//                 } catch (error) {
-//                     console.log(error)
-//                 }
-//             }
-//         }
-//         fetchUserVideos();
+// //                 } catch (error) {
+// //                     console.log(error)
+// //                 }
+// //             }
+// //         }
+// //         fetchUserVideos();
 
-//     },[userStatus])
-//   return (
-//     <>
-//     {userStatus==true ?(
-//         <Box>
-//         <Box sx={{width:'50%'}}>
-//           {videos.map((suggestion, index) => (
+// //     },[userStatus])
+// //   return (
+// //     <>
+// //     {userStatus==true ?(
+// //         <Box>
+// //         <Box sx={{width:'50%'}}>
+// //           {videos.map((suggestion, index) => (
             
-//             <HorizontalVideoCard
-//               key={index}
-//               suggestion={suggestion}
+// //             <HorizontalVideoCard
+// //               key={index}
+// //               suggestion={suggestion}
               
-//             />
+// //             />
             
            
-//           ))}
-//         </Box>
-//         <Button>Edit</Button>
+// //           ))}
+// //         </Box>
+// //         <Button>Edit</Button>
         
-//         </Box>
-//     ):(<SignupLoginButton/>)}
-//     </>
-//   )
-// }
+// //         </Box>
+// //     ):(<SignupLoginButton/>)}
+// //     </>
+// //   )
+// // }
 
-// export default EditVideo
+// // export default EditVideo
 import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { checkUser } from '../../../Store/atoms/userAtoms';
@@ -59,11 +59,13 @@ import { getUserVideos } from '../../../api/videoService';
 import { Box, Button, Stack } from '@mui/material';
 import HorizontalVideoCard from '../../VideoCard/HorizontalVideoCard';
 import EditVideoDialogBox from './EditVideoDialogBox';
+import DeleteVideoDialogbox from './DeleteVideoDialogbox';
 
 function EditVideo() {
   const userStatus = useRecoilValue(checkUser);
   const [videos, setVideos] = useState([]);
   const [open, setOpen] = useState(false);
+  const [deleteOpen,setDeleteOpen]=useState(false);
   const [selectedVideo, setSelectedVideo] = useState({ title: '', description: '' });
 
   useEffect(() => {
@@ -85,11 +87,17 @@ function EditVideo() {
     setSelectedVideo(video);
     setOpen(true);
   };
-
+  const handleDeleteClick = (video) => {
+    setSelectedVideo(video);
+    setDeleteOpen(true);
+  }
   const handleClose = () => {
     setOpen(false);
   };
 
+  const handleDeleteClose = () => {
+    setDeleteOpen(false);
+  };
   return (
     <>
       {userStatus ? (
@@ -113,6 +121,13 @@ function EditVideo() {
               >
                 Edit
               </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleDeleteClick(video)}
+              >
+                Delete
+              </Button>
             </Stack>
           ))}
         </Box>
@@ -120,17 +135,27 @@ function EditVideo() {
         <SignupLoginButton />
       )}
 
-      {/* Dialog Box
       <EditVideoDialogBox
         open={open}
         handleClose={handleClose}
         video={selectedVideo}
-      /> */}
+        // title={selectedVideo.title}
+        // thumbnail={selectedVideo.thumbnail}
+        // isPublished={selectedVideo.isPublished}
+
+      />
+      <DeleteVideoDialogbox
+      open={deleteOpen}
+      video={selectedVideo}
+      handleClose={handleDeleteClose}
+
+      />
     </>
   );
 }
 
 export default EditVideo;
+
 
 
 

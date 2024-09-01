@@ -23,7 +23,7 @@ import axios from './axios'; // Import the configured Axios instance
 export const RegisterUser=async(formData)=>{
     
     try {
-        const postNewUser=await axios.post('users/register',
+        const postNewUser=await axios.post('/users/register',
             formData,{
               headers: {
                 'Content-Type': 'multipart/form-data'
@@ -159,6 +159,7 @@ export const toggleChannelSubscription=async(channelId)=>{
 }
 
 export const checkUserSubscription=async(channelId)=>{
+    console.log(channelId)
     try {
         const response=await axios.get(`/subscriptions/subscriptionStatus/${channelId}`)
         return response.data.data

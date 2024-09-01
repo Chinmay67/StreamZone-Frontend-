@@ -9,7 +9,7 @@ function OtherChannelProfile() {
     const { channelName } = useParams();
     const [channel, setChannel] = useState(null);
     const [otherVideos, setOtherVideos] = useState(null);
-    c
+    
     useEffect(() => {
         const fetchOtherChannel = async (channelName) => {
             try {
@@ -27,6 +27,7 @@ function OtherChannelProfile() {
             try {
                 const response = await fetchOtherChannelVideos(channelName);
                 setOtherVideos(response);
+                console.log(response)
             } catch (error) {
                 console.log(error);
             }
@@ -67,14 +68,28 @@ function OtherChannelProfile() {
 
             <Divider orientation="horizontal" variant="middle" sx={{ margin: "30px" }} />
 
-            <Grid container spacing={0.2}>
-                {otherVideos?.length > 0 && otherVideos.map((video, index) => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+            <Grid 
+                container 
+                spacing={1.5}  
+                // justifyContent="center"  
+            >
+                {otherVideos?.length > 0 && otherVideos?.map((video, index) => (
+                    <Grid 
+                        item 
+                        xs={12} 
+                        sm={6} 
+                        md={4} 
+                        lg={3} 
+                        xl={2.4} 
+                        key={index}
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}
+                    >
                         <VideoCard video={video} />
                     </Grid>
                 ))}
-                {otherVideos.length===0 &&
-                <>No Videos Yet!!</>}
             </Grid>
         </>
     );
